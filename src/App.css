@@ -42,40 +42,55 @@
   padding: 20px;
 }
 
+button {
+  padding: 6px 10px; /* 버튼의 크기 조정 */
+  cursor: pointer; /* 버튼 위에 마우스를 올렸을 때 커서 변경 */
+  /* 기타 버튼 스타일링 */
+}
+
+.mini-header{
+  font-family:monospace;
+	font-weight:bold;
+  font-size:16px;
+}
+
 .sidebar {
   display: flex;
-  flex:1;
+  flex:0.5;
   flex-direction: column;
-  margin-right: 300px;
+  margin-right: 280px;
   flex-shrink: 0; /* 사이드바 크기를 고정 */
+
+  text-align: center;
 }
 
-.keyword-button {
-  padding: 10px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  width: 100%;
-}
+.right-sidebar {
+  display: flex;
+  flex:1.5;
+  flex-direction: column;
+  margin-left: 50px;
+  margin-right: 30px;
+  flex-shrink: 0; /* 사이드바 크기를 고정 */
 
-.keyword-detail {
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-left: 3px solid #007bff;
-  margin-bottom: 15px;
+  align-items: center;
 }
 
 .textarea{
   display: flex;
   flex:6;
-  /* flex-direction: column; */
+}
+
+.button-container {
+  align-self: flex-end; /* 컨테이너를 오른쪽으로 정렬 */
+  margin-top: 5px;
 }
 
 .text-view {
   flex-grow: 1;
   width: 100%;
-  height: 300px;
+  height: 100%;
   margin-left: 0px;
-  margin-right: 50px;
+  margin-right: 0px;
 
   resize:none;
   font-family:Courier, monospace;
@@ -83,8 +98,8 @@
   font-size:16px;
   background-color:#FFF;
   line-height:24px;
-  padding-left:100px;
-	padding-right:100px;
+  padding-left:70px;
+	padding-right:70px;
 	padding-top:45px;
 	padding-bottom:34px;
   -webkit-border-radius:12px;
@@ -100,11 +115,29 @@
   position: relative;
 }
 
+.keyword-button {
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 14px;
+}
+
+/* .keyword-detail {
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-left: 3px solid #007bff;
+  margin-bottom: 15px;
+} */
+
 .keyword-tooltip {
   position: absolute;
   left: 100%;
   min-width: 300px;
-  margin-left: 20px;
+  /* margin-left: 20px; */
   padding: 10px;
 
   top:0;
@@ -135,7 +168,10 @@
 .tooltip-content {
   font-size: 0.9rem;
   line-height: 1.4;
-  align-items: center;
+}
+
+.tooltip-content > p {
+  text-align: left;
 }
 
 .loading-container {
@@ -145,6 +181,56 @@
   height: 100%; /* 부모의 높이에 맞춤 */
 }
 
+.search-bar {
+  display: flex;
+  align-items: center; /* 수평 정렬을 위해 */
+  margin-bottom: 10px;
+}
+
+.search-input {
+  font-size: 14px;
+  flex-grow: 1; /* 나머지 공간을 채우기 위해 */
+  margin-right: 8px; /* 버튼과의 간격 */
+}
+
+.gauge-bar-container {
+  border: 1px solid #c0c0c0;
+  border-radius: 0px;
+  overflow: hidden;
+}
+
+.gauge-bar-fill {
+  border-radius: 0px 0 0 0px;
+}
+
+.info-button-container {
+  position: relative; /* 상대적 위치 지정 */
+  display: inline-block; /* 내부의 요소들을 inline으로 배치 */
+}
+
+.info-button {
+  margin-left: 5px; /* Ensure a gap between the buttons */
+  background: none; /* Remove default button styling if desired */
+  border: none; /* Remove default button styling if desired */
+  cursor: pointer;
+  height: 16px;
+}
+
+.info-tooltip {
+  position: absolute;
+  top: 100%; /* Position below the button */
+  left: 50%; /* Start from the middle of the button */
+  transform: translateX(-50%); /* Center the tooltip */
+  background-color: #f9f9f9;
+  border: 1px solid #cacaca;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 5px; /* Give some space between the tooltip and the button */
+  z-index: 10; /* Make sure the tooltip is above other elements */
+  white-space: 'pre-line'; /* Prevent text from wrapping */
+
+  font-size: 10px;
+}
 
 .alert {
   position: fixed;
