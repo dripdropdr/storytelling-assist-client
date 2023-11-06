@@ -40,6 +40,7 @@
 .app {
   display: flex;
   padding: 20px;
+  margin-top: 40px;
 }
 
 button {
@@ -184,13 +185,18 @@ button {
 .search-bar {
   display: flex;
   align-items: center; /* 수평 정렬을 위해 */
-  margin-bottom: 10px;
 }
 
 .search-input {
   font-size: 14px;
   flex-grow: 1; /* 나머지 공간을 채우기 위해 */
   margin-right: 8px; /* 버튼과의 간격 */
+}
+
+.search-loading-container{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .gauge-bar-container {
@@ -230,6 +236,17 @@ button {
   white-space: 'pre-line'; /* Prevent text from wrapping */
 
   font-size: 10px;
+}
+
+.add-keyword-section {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.add-keyword-section input {
+  font-size: 14px;
+  margin-right: 5px;
+  flex-grow: 1;
 }
 
 .alert {

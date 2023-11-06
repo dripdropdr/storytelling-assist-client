@@ -19,10 +19,10 @@ function Loading(){
 }
 
 // ************************************************************************* 
-function Keyword({ keyword, text, onInsert, isTextLoading, onCompleted }) {
+function Keyword({ keyword, story, onInsert, isTextLoading, onCompleted, isOpen, toggleTooltip }) {
   const [detail, setDetail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [isLoadComplete, setIsLoadComplete] = useState(false); // 상태 추가
 
   const handleInsertClick = async () => {
@@ -34,13 +34,14 @@ function Keyword({ keyword, text, onInsert, isTextLoading, onCompleted }) {
 
   const fetchDetails = async () => {
     setIsLoading(true);
+    console.log(story)
     try {
       const response = await fetch(conceptEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ story: text, keyword})
+        body: JSON.stringify({ story, keyword})
       });
       const data = await response.json();
       setDetail(data.concept_detail); // API 응답에서 세부사항을 설정
@@ -51,10 +52,10 @@ function Keyword({ keyword, text, onInsert, isTextLoading, onCompleted }) {
   };
 
   const handleToggle = () => {
+    toggleTooltip(keyword);
     if (!isOpen) {
       fetchDetails();
     }
-    setIsOpen(!isOpen);
   };
 
   return (
@@ -162,6 +163,8 @@ function App() {
   const [filteredKeywords, setFilteredKeywords] = useState(keywords); // 필터링된 키워드 목록 상태
   const [gaugeValue, setGaugeValue] = useState(sessionStorage.getItem("gaugeValue") || 0);
   const [previousText, setPreviousText] = useState(sessionStorage.getItem("previousText") ||givenText)
+  const [tooltipsOpen, setTooltipsOpen] = useState({});  // 툴팁 표시 상태를 관리하는 상태 변수
+  const [newKeyword, setNewKeyword] = useState(''); // 새 키워드 입력을 위한 상태 변수
 
   useEffect(() => {
     const storedText = sessionStorage.getItem("text");
@@ -231,7 +234,16 @@ function App() {
       setIsSearchLoading(false); // 로딩 상태 종료
       setIsSearchComplete(true);
       setCompleteSearchTerm(searchTerm)
+      setTooltipsOpen({}); // 모든 키워드의 툴팁을 닫는 로직
     }
+  };
+
+  // 툴팁 토글 함수
+  const toggleTooltip = (keyword) => {
+    setTooltipsOpen(prevState => ({
+      ...prevState,
+      [keyword]: !prevState[keyword]
+    }));
   };
 
   const handleSimilarity = async () => {
@@ -255,21 +267,27 @@ function App() {
     }
   }
 
+  const handleAddKeyword = () => {
+    if (newKeyword.trim() !== '') {
+      // 새 키워드를 기존 키워드 목록에 추가
+      setFilteredKeywords(prevKeywords => [...prevKeywords, newKeyword.trim()]);
+      setNewKeyword(''); // 입력 필드 초기화
+    }
+  };
+
   return (
     <div className="app">
       {alert && <div className="alert">{alert}</div>}
       <div className="sidebar">
-        <p className='mini-header'>Find your Keywords</p>
-        <div className="search-bar">
+        <p className='mini-header'>Explore your Keywords!</p>
+        <div className="add-keyword-section">
           <input
-            className='search-input'
             type="text"
-            placeholder="Search keywords..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Add your new keyword"
+            value={newKeyword}
+            onChange={(e) => setNewKeyword(e.target.value)}
           />
-          <button type='button' onClick={handleSearch}>Search</button>
-          {isSearchLoading && <Loading/>}
+          <button onClick={handleAddKeyword}>Add</button>
         </div>
         {isSearchComplete && <p>Result from {completeSearchTerm}..</p>}
         {filteredKeywords.map((keyword, index) => ( // filteredKeywords
@@ -280,8 +298,26 @@ function App() {
             onInsert={handleInsert}
             isTextLoading={isTextLoading} // 로딩 상태를 Keyword 컴포넌트에 전달
             onCompleted={handleLoadComplete}
+            isOpen={tooltipsOpen[keyword]}
+            toggleTooltip={() => toggleTooltip(keyword)}
           />
         ))}
+        <p className='mini-header'></p>
+        <p className='mini-header'>Search related Keywords</p>
+        <div className="search-bar">
+          <input
+            className='search-input'
+            type="text"
+            placeholder="Search keywords..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button type='button' onClick={handleSearch}>Search</button>
+        </div>
+        <div className='search-loading-container'>
+          <br/>
+          {isSearchLoading && <Loading/>}
+        </div>
       </div>
       <div className="textarea">
         <TextView text={text} onTextChange={handleTextChange} />
