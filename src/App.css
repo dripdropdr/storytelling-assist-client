@@ -59,8 +59,9 @@ button {
   display: flex;
   flex:0.5;
   flex-direction: column;
-  margin-right: 280px;
-  flex-shrink: 0; /* 사이드바 크기를 고정 */
+  margin-right: 160px;
+  flex-shrink: 1;
+  flex-basis: 10%;
 
   text-align: center;
 }
@@ -76,9 +77,16 @@ button {
   align-items: center;
 }
 
+.main-content {
+  display: flex;
+  flex:7;
+  /* 필요하다면 추가적인 스타일링을 여기에 적용 */
+}
+
 .textarea{
   display: flex;
   flex:6;
+  flex-grow: 1; /* 남은 공간을 채우도록 설정 */
 }
 
 .button-container {
@@ -112,6 +120,7 @@ button {
 
 .keyword-container {
   display: flex;
+  flex:1;
   align-items: center;
   position: relative;
 }
@@ -126,13 +135,6 @@ button {
   width: 100%;
   font-size: 14px;
 }
-
-/* .keyword-detail {
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-left: 3px solid #007bff;
-  margin-bottom: 15px;
-} */
 
 .keyword-tooltip {
   position: absolute;
@@ -169,6 +171,7 @@ button {
 .tooltip-content {
   font-size: 0.9rem;
   line-height: 1.4;
+  white-space: 'pre-wrap' !important;
 }
 
 .tooltip-content > p {
@@ -226,7 +229,7 @@ button {
   position: absolute;
   top: 100%; /* Position below the button */
   left: 50%; /* Start from the middle of the button */
-  transform: translateX(-50%); /* Center the tooltip */
+  transform: translateX(-70%); /* Center the tooltip */
   background-color: #f9f9f9;
   border: 1px solid #cacaca;
   border-radius: 4px;
@@ -240,6 +243,7 @@ button {
 
 .add-keyword-section {
   display: flex;
+  margin-top: 5px;
   margin-bottom: 10px;
 }
 
@@ -247,6 +251,60 @@ button {
   font-size: 14px;
   margin-right: 5px;
   flex-grow: 1;
+}
+
+.examples-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* 버튼을 아래로 정렬 */
+  padding: 20px; /* 여백을 주어 디자인을 개선 */
+  height: 100%; /* 컨테이너 높이를 부모와 동일하게 설정 */
+}
+
+.examples-container button {
+  margin-bottom: 10px; /* 버튼 사이 간격 */
+}
+
+/* 마지막 버튼의 마진 제거 */
+.examples-container button:last-child {
+  margin-bottom: 0;
+}
+
+.info-bar {
+  position: relative; /* 툴팁을 절대 위치로 설정하기 위함*/
+  text-align: right; /* // 정보 버튼을 오른쪽으로 정렬 */
+  margin-top: -27px; /* // 검색 바와의 간격 */
+  margin-bottom: 5px; /* // 검색 바와의 간격 */
+}
+
+.search-info-button {
+  margin-left: 5px; /* Ensure a gap between the buttons */
+  background: none; /* Remove default button styling if desired */
+  border: none; /* Remove default button styling if desired */
+  cursor: pointer;
+  height: 16px;
+}
+
+.search-info-tooltip {
+  position: absolute;
+  top: 0%; /* // 버튼 바로 아래에 표시 */
+  right: 0%; /* // 오른쪽 정렬 */
+  transform: translateX(105%); /* Center the tooltip */
+  background-color: #f9f9f9;
+  border: 1px solid #cacaca;
+  border-radius: 4px;
+  padding: 5px;
+  margin-top: 5px; /* Give some space between the tooltip and the button */
+  z-index: 10; /* Make sure the tooltip is above other elements */
+  white-space: 'pre-line'; /* Prevent text from wrapping */
+  text-align: left;
+
+  font-size: 10px;
+}
+
+.search-info-tooltip > {
+  margin-block-start: 0em;
+
 }
 
 .alert {

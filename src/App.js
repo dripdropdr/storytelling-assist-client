@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import {Oval} from "react-loader-spinner"
 
-const keywords = ['React', 'UI', 'Component', 'JavaScript', 'Programming'];
+const keywords = ['Michal Jackson', 'pink sweater', 'ducks', 'halloween', 'silver dolphins'];
+
+const exampleTexts = [
+  "The bad boy I knew as a kid is back and even worse! When Chul, who lives in the villa next door to Mi-ae in middle school and whom she briefly saw in the countryside as a child, goes to the same school and class as her, and is teased as duo Chul takes offense and avoids Mi-ae. Mi-ae is offended, but they continue to get involved through strange coincidences, and eventually they both get very upset and stop pretending to know each other anymore. As Mi-ae gets involved with Chul, who is always angry, and some of the strangest friends she's ever met, Mi-ae experiences puberty the hard way...",
+  "Yoon Ji-ho is too positive and too unobtrusive, and there are men who have been secretly crushing on her for years.  Will their hearts be able to reach Yoon Ji-ho, the worst sensation of all? The best no-nonsense comedy romance of this era.",
+  "Navier was the perfect empress of the Eastern Empire. When she realizes that her husband, the Emperor, is trying to make her Empress, she decides to divorce him. If I can't be empress here, I'll be empress somewhere else.",
+];
 
 const conceptEndpoint = '/concept-generate'
 const storyEndpoint = '/story-merge'
@@ -127,22 +133,22 @@ function GaugeBar({ value }) {
 }
 
 function GaugeButton({ onCheckDiversity }) {
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const [isInfoTooltipVisible, setIsInfoTooltipVisible] = useState(false);
 
-  const toggleTooltip = () => {
-    setIsTooltipVisible(!isTooltipVisible);
+  const toggleInfo = () => {
+    setIsInfoTooltipVisible(!isInfoTooltipVisible);
   };
 
   return(
     <div className="button-container">
       <button type='button' onClick={onCheckDiversity}>Check diversity</button>
       <div className="info-button-container">
-      <img src={'./info-icon.png'} alt="Info" onClick={toggleTooltip} className="info-button"/>
-      {isTooltipVisible && (
-        <div className="info-tooltip">
-          This value is calcuated by previous compared text and now.
-        </div>
-      )}
+        <img src={'./info-icon.png'} alt="Info" onClick={toggleInfo} className="info-button"/>
+        {isInfoTooltipVisible && (
+          <div className="info-tooltip">
+            This value is calcuated by previous compared text and now.
+          </div>
+        )}
       </div>
     </div>
   )
@@ -165,6 +171,13 @@ function App() {
   const [previousText, setPreviousText] = useState(sessionStorage.getItem("previousText") ||givenText)
   const [tooltipsOpen, setTooltipsOpen] = useState({});  // 툴팁 표시 상태를 관리하는 상태 변수
   const [newKeyword, setNewKeyword] = useState(''); // 새 키워드 입력을 위한 상태 변수
+  const [showInfo, setShowInfo] = useState(false); // 정보 툴팁 표시 여부를 제어하는 상태
+
+
+  // 예시 텍스트를 `text` 상태에 설정하는 함수
+  const handleSetText = (exampleText) => {
+    setText(exampleText);
+  };
 
   useEffect(() => {
     const storedText = sessionStorage.getItem("text");
@@ -275,6 +288,10 @@ function App() {
     }
   };
 
+  const toggleInfo = () => {
+    setShowInfo(!showInfo); // 정보 툴팁 표시 상태를 토글
+  };
+
   return (
     <div className="app">
       {alert && <div className="alert">{alert}</div>}
@@ -304,6 +321,15 @@ function App() {
         ))}
         <p className='mini-header'></p>
         <p className='mini-header'>Search related Keywords</p>
+        <div className="info-bar">
+          <img src={'./info-icon.png'} alt="Info" onClick={toggleInfo} className="search-info-button"/>
+          {showInfo && (
+            <div className="search-info-tooltip">
+              {/* 여기에 정보 툴팁 내용을 넣습니다 */}
+              <p>This searching function is sourced by Reddit. After preprocessing and touching some creativity-intriguing technique, keywords are served.</p>
+            </div>
+          )}
+      </div>
         <div className="search-bar">
           <input
             className='search-input'
@@ -319,8 +345,17 @@ function App() {
           {isSearchLoading && <Loading/>}
         </div>
       </div>
-      <div className="textarea">
-        <TextView text={text} onTextChange={handleTextChange} />
+      <div className="main-content">
+        <div className="examples-container">
+            {exampleTexts.map((example, index) => (
+              <button key={index} onClick={() => handleSetText(example)}>
+                {`Example ${index + 1}`}
+              </button>
+            ))}
+          </div>
+        <div className="textarea">
+          <TextView text={text} onTextChange={handleTextChange} />
+        </div>
       </div>
       <div className="right-sidebar">
         <p className='mini-header'>Completed Keywords</p>
