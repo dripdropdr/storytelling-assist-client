@@ -171,11 +171,17 @@ button {
 .tooltip-content {
   font-size: 0.9rem;
   line-height: 1.4;
-  white-space: 'pre-wrap' !important;
+  text-align: left;
+  
 }
 
-.tooltip-content > p {
-  text-align: left;
+.tooltip-content > span {
+  overflow-wrap: normal;
+  white-space: pre-wrap;
+}
+
+.tooltip-insert-button{
+  text-align: center;
 }
 
 .loading-container {
@@ -200,6 +206,14 @@ button {
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+
+.refresh-button{
+  margin-left: 5px; /* Ensure a gap between the buttons */
+  background: none; /* Remove default button styling if desired */
+  border: none; /* Remove default button styling if desired */
+  cursor: pointer;
+  height: 16px;
 }
 
 .gauge-bar-container {
@@ -227,16 +241,17 @@ button {
 
 .info-tooltip {
   position: absolute;
-  top: 100%; /* Position below the button */
-  left: 50%; /* Start from the middle of the button */
+  top: 120%; /* Position below the button */
+  left: 100%; /* Start from the middle of the button */
   transform: translateX(-70%); /* Center the tooltip */
   background-color: #f9f9f9;
   border: 1px solid #cacaca;
   border-radius: 4px;
-  padding: 10px;
+  padding: 5px;
   margin-top: 5px; /* Give some space between the tooltip and the button */
   z-index: 10; /* Make sure the tooltip is above other elements */
   white-space: 'pre-line'; /* Prevent text from wrapping */
+  width:600%;
 
   font-size: 10px;
 }
@@ -302,7 +317,7 @@ button {
   font-size: 10px;
 }
 
-.search-info-tooltip > {
+.search-info-tooltip > span {
   margin-block-start: 0em;
 
 }

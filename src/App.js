@@ -8,11 +8,13 @@ const exampleTexts = [
   "The bad boy I knew as a kid is back and even worse! When Chul, who lives in the villa next door to Mi-ae in middle school and whom she briefly saw in the countryside as a child, goes to the same school and class as her, and is teased as duo Chul takes offense and avoids Mi-ae. Mi-ae is offended, but they continue to get involved through strange coincidences, and eventually they both get very upset and stop pretending to know each other anymore. As Mi-ae gets involved with Chul, who is always angry, and some of the strangest friends she's ever met, Mi-ae experiences puberty the hard way...",
   "Yoon Ji-ho is too positive and too unobtrusive, and there are men who have been secretly crushing on her for years.  Will their hearts be able to reach Yoon Ji-ho, the worst sensation of all? The best no-nonsense comedy romance of this era.",
   "Navier was the perfect empress of the Eastern Empire. When she realizes that her husband, the Emperor, is trying to make her Empress, she decides to divorce him. If I can't be empress here, I'll be empress somewhere else.",
+  "29-year-old Bong-Wi, Chauri, and Kim, whose relationships, jobs, and exams aren't going as planned.  We got it! Our fact-bombing romantic comedy!",
 ];
 
 const conceptEndpoint = '/concept-generate'
 const storyEndpoint = '/story-merge'
 const simEndpoint = '/sentence-similarity'
+const refreshEndpoint = '/refresh-keywords'
 
 function Loading(){
   return (
@@ -75,13 +77,13 @@ function Keyword({ keyword, story, onInsert, isTextLoading, onCompleted, isOpen,
           <div className="tooltip-content">
             {isLoading ? <div className="loading-container"><Loading/></div> : (
                 <>
-                  <p>{detail}</p>
+                  <span>{detail}</span>
                   {isTextLoading ? (
                     <div className="loading-container"><Loading/></div>
                   ) : isLoadComplete ? (
                     <div className='loading-container'><img src='/checkmark.png' width='25'/></div>
                   ) : (
-                    <button onClick={handleInsertClick}>Insert?</button>
+                    <div className='tooltip-insert-button'><button onClick={handleInsertClick}>Insert?</button></div>
                   )}
                 </>
               )}
@@ -97,6 +99,7 @@ function TextView({ text, onTextChange }) {
   return (
     <textarea
       className="text-view"
+      placeholder="Write down your webtoon plot..."
       value={text}
       onChange={onTextChange}
     />
@@ -157,7 +160,7 @@ function GaugeButton({ onCheckDiversity }) {
 
 // ************************************************************************* 
 function App() {
-  const givenText = "29-year-old Bong-Wi, Chauri, and Kim, whose relationships, jobs, and exams aren't going as planned.  We got it! Our fact-bombing romantic comedy!"
+  const givenText = "Write down you webtoon plot!"
   const [text, setText] = useState(sessionStorage.getItem("text") || givenText);
   const [isTextLoading, setIsTextLoading] = useState(false);
   const [completedKeywords, setCompletedKeywords] = useState([]);
@@ -251,6 +254,25 @@ function App() {
     }
   };
 
+  const refreshSearch = async () => {
+    if (completeSearchTerm){
+      setIsSearchComplete(false);
+      setIsSearchLoading(true); // 로딩 상태 시작
+      try {
+        const response = await fetch(`/refresh-keywords?query=${encodeURIComponent(completeSearchTerm)}`);
+        const data = await response.json();
+        setFilteredKeywords(data.keywords); // 서버로부터 받은 키워드 목록으로 상태 업데이트
+        console.log(data.keywords)
+      } catch (error) {
+        console.error("Failed to fetch keywords:", error);
+        // 에러 처리 로직 (상태 업데이트 등)
+      }
+      setIsSearchLoading(false); // 로딩 상태 종료
+      setIsSearchComplete(true);
+      setTooltipsOpen({}); // 모든 키워드의 툴팁을 닫는 로직
+    }
+  };
+
   // 툴팁 토글 함수
   const toggleTooltip = (keyword) => {
     setTooltipsOpen(prevState => ({
@@ -306,7 +328,7 @@ function App() {
           />
           <button onClick={handleAddKeyword}>Add</button>
         </div>
-        {isSearchComplete && <p>Result from {completeSearchTerm}..</p>}
+        {isSearchComplete && <p>Result from {completeSearchTerm}...</p>}
         {filteredKeywords.map((keyword, index) => ( // filteredKeywords
           <Keyword
             key={index}
@@ -326,7 +348,7 @@ function App() {
           {showInfo && (
             <div className="search-info-tooltip">
               {/* 여기에 정보 툴팁 내용을 넣습니다 */}
-              <p>This searching function is sourced by Reddit. After preprocessing and touching some creativity-intriguing technique, keywords are served.</p>
+              <span>This searching function is sourced by Reddit. After preprocessing and touching some creativity-intriguing technique, keywords are served.</span>
             </div>
           )}
       </div>
@@ -343,6 +365,9 @@ function App() {
         <div className='search-loading-container'>
           <br/>
           {isSearchLoading && <Loading/>}
+        </div>
+        <div>
+          {isSearchComplete && <img src='refresh-icon.png' alt="Refresh" onClick={refreshSearch} className='refresh-button'/>}
         </div>
       </div>
       <div className="main-content">
